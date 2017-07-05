@@ -1,13 +1,5 @@
 (ns paip.search)
 
-(defn fibonacci
-  "fibonacci function"
-  [n]
-  (cond (= n 0) 0
-        (= n 1) 1
-        :else (+ (fibonacci (- n 2)) (fibonacci (- n 1)))))
-
-
 (defn tree-search
   "General tree-search function"
   [states goal?-fn successors combiner]
@@ -57,19 +49,6 @@
   (tree-search (list start) goal?-fn successors concat))
 
 ;; best-first-search
-
-(defn diff
-  [num]
-  (fn [x]
-    (Math/abs (- x num))))
-
-(defn price-is-right
-  "Return a function that measures the difference from price"
-  [price]
-  (fn [x]
-    (if (> x price)
-      (Integer/MAX_VALUE)
-      (- price x))))
 
 (defn sorter
   [cost-fn]
@@ -121,41 +100,3 @@
                     total-cost (+ old-cost (cost-left-fn new-state))]
                 (Path. new-state old-path old-cost total-cost)))]
       (map f (successors old-state)))))
-
-;; binary-tree example
-(defn binary-tree
-  "A successor function"
-  [x]
-  {:pre [(pos? x)]
-   :post [(= (count %) 2)]}
-  (list (* 2 x) (+ 1 (* 2 x))))
-
-(defn finite-binary-tree
-  "Returns a successor function that generates a tree with n nodes"
-  [n]
-  (fn [x]
-    (filter #(<= % n) (binary-tree x))))
-
-(defn abs
-  [x]
-  (Math/abs x))
-
-(defn breadth-search-binary-tree-path
-  [n]
-  (breadth-first-search (Path. 1 nil 0 n)
-                        #(= (:state %1) n)
-                        (path-saver binary-tree (fn [_ _] 1) (fn [state] (abs (- state n))))))
-
-(defn depth-search-binary-tree-path
-  [n]
-  (depth-first-search (Path. 1 nil 0 n)
-                        #(= (:state %1) n)
-                        (path-saver (finite-binary-tree n) (fn [_ _] 1) (fn [state] (abs (- state n))))))
-
-(defn is
-  [n]
-  (fn [x] (= x n)))
-
-(defn next2
-  [x]
-  (list (+ x 1) (+ x 2)))

@@ -1,8 +1,6 @@
 (ns paip.nqueens
   (:require [paip.search :refer :all]))
 
-;; (breadth-first-search 1 (is 12) binary-tree)
-
 (defn abs
   [x]
   (Math/abs x))
@@ -51,7 +49,3 @@
 (defn nqueens-all-solutions
   [n]
   (search-all [] (fn [states] (= n (count states))) (successors n)))
-
-
-;; (count (nqueens-all-solutions 4))
-;; (count (nqueens-all-solutions 8))

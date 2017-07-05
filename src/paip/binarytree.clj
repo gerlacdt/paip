@@ -2,7 +2,6 @@
   (:require [paip.search :as search])
   (:import [paip.search Path]))
 
-
 (defn diff
   [num]
   (fn [x]
@@ -15,7 +14,6 @@
     (if (> x price)
       (Integer/MAX_VALUE)
       (- price x))))
-
 
 (defn binary-tree
   "A successor function"

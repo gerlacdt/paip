@@ -11,9 +11,19 @@
                            successors
                            combiner)))
 
+(defn prepend [lst-1 lst-2]
+  (concat lst-2 lst-1))
+
+(defn breadth-first-search
+  [start goal?-fn successors]
+  (tree-search (list start) goal?-fn successors prepend))
+
+(defn depth-first-search
+  [start goal?-fn successors]
+  (tree-search (list start) goal?-fn successors concat))
+
 
 ;; graph-search
-
 (defn new-states
   "Generate successor states that have not have seen before"
   [states successors old-states]
@@ -37,19 +47,7 @@
                            (conj (set old-states) (first states)))))
 
 
-(defn prepend [lst-1 lst-2]
-  (concat lst-2 lst-1))
-
-(defn breadth-first-search
-  [start goal?-fn successors]
-  (tree-search (list start) goal?-fn successors prepend))
-
-(defn depth-first-search
-  [start goal?-fn successors]
-  (tree-search (list start) goal?-fn successors concat))
-
 ;; best-first-search
-
 (defn sorter
   [cost-fn]
   (fn [new old]
@@ -85,7 +83,6 @@
     @solutions))
 
 ;; save search path
-
 (defrecord Path
     [state previous cost-so-far total-cost])
 

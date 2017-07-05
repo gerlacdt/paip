@@ -5,7 +5,7 @@
   [states goal?-fn successors combiner]
   (cond (empty? states) nil
         (goal?-fn (first states)) (first states)
-        :else (tree-search (combiner (successors (first states))
+        :else (recur (combiner (successors (first states))
                                      (rest states))
                            goal?-fn
                            successors
@@ -28,7 +28,7 @@
   [states goal?-fn successors combiner old-states]
   (cond (empty? states) nil
         (goal?-fn (first states)) (first states)
-        :else (graph-search (combiner
+        :else (recur (combiner
                              (new-states states successors old-states)
                              (rest states))
                            goal?-fn

@@ -1,15 +1,14 @@
-(ns paip.gps
+(ns paip.gps-enhanced
   (:require [clojure.set :as set]))
 
 (defrecord Operation [action preconds add-list del-list])
 
 (def ops (list (Operation. 'drive-son-to-school '(son-at-home car-works) '(son-at-school) '(son-at-home))
-               ;; (Operation. 'shop-installs-battery '(car-needs-battery shop-knows-problem shop-has-money) '(car-works) nil)
-               ;; (Operation. 'tell-shop-problem '(in-communication-with-shop) '(shop-knows-problem) nil)
-               ;; (Operation. 'telephone-shop '(know-phone-number) '(in-communication-with-shop) nil)
-               ;; (Operation. 'look-up-number '(have-phone-book) '(know-phone-number) nil)
-               ;; (Operation. 'give-ship-money '(have-money) '(shop-has-money) '(have-money))
-               ))
+               (Operation. 'shop-installs-battery '(car-needs-battery shop-knows-problem shop-has-money) '(car-works) nil)
+               (Operation. 'tell-shop-problem '(in-communication-with-shop) '(shop-knows-problem) nil)
+               (Operation. 'telephone-shop '(know-phone-number) '(in-communication-with-shop) nil)
+               (Operation. 'look-up-number '(have-phone-book) '(know-phone-number) nil)
+               (Operation. 'give-shop-money '(have-money) '(shop-has-money) '(have-money))))
 
 
 (defn starts-with
@@ -34,6 +33,9 @@
 
 (def eops (map convert-op ops))
 
+
+(declare achieve)
+(declare achieve-all)
 
 (defn member-equal [item list]
   (some #(= item %) list))
@@ -73,8 +75,13 @@
 (defn gps
   "general problem solver algorithm"
   [state goals operations]
-  (achieve-all (cons '(start) state) goals nil operations))
+  (let [result (achieve-all (cons '(start) state) goals nil operations)]
+    (filter #(or (= '(start) %) (and (sequential? %) (= 'executing (first %)))) result)))
 
-(defn solve []
+(defn solve-easy []
   (let [state '(son-at-home car-works)]
+    (gps state '(son-at-school) eops)))
+
+(defn solve-hard []
+  (let [state '(son-at-home car-needs-battery have-money have-phone-book)]
     (gps state '(son-at-school) eops)))

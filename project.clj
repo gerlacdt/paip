@@ -11,4 +11,5 @@
   :profiles {:uberjar {:aot :all}
              :repl {:plugins [[cider/cider-nrepl "0.16.0"]]}
              :dev {:source-paths ["dev"]
-                   :dependencies [[org.clojure/tools.trace "0.7.9"]]}})
+                   :dependencies [[org.clojure/tools.trace "0.7.9"]
+                                  [spyscope "0.1.6"]]}})

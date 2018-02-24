@@ -28,6 +28,13 @@
           :else nil)))
 
 
+(defn position
+  "Returns the index of the first item in the given list. Start searching from
+  given start index."
+  [item lst start]
+  (+ start (.indexOf (drop start lst) item)))
+
+
 (declare segment-pattern-p)
 (declare segment-match)
 
@@ -58,15 +65,16 @@
        (match-variable var input bindings)
        ;; we assume that pat starts with a constant
        ;; In other words, a pattern can't have 2 consecutive vars
-       (let [pos (.indexOf (drop start input) (first pat))]
+       (let [pos (position (first pat) input start)]
          (if (= -1 pos)
            nil
-           (let [b2 (pat-match pat (drop pos input) bindings)]
+           (let [b2 (pat-match pat (drop pos input)
+                               (match-variable var (take pos input) bindings))]
              ;; If this match failed, try another longer one
              ;; If it worked, check that the variables match
              (if (nil? b2)
                (segment-match pattern input bindings (+ pos 1))
-               (match-variable var (take pos input) b2)))))))))
+               b2))))))))
 
 (defn solve-1 []
   (pat-match '(i need a ?X) '(i need a vacation)))
@@ -81,6 +89,9 @@
   (pat-match '((?* ?p) need (?* ?x))
              '(Mr Hulot and I need a vacation)))
 
-;;  infinite recursion (somehow the recursion stop condition is wrong)
 (defn solve-5 []
   (pat-match '((?* ?x) is a (?* ?y)) '(what he is is a fool)))
+
+(defn solve-6 []
+  (pat-match '((?* ?x) a b (?* ?x))
+             '(1 2 a b a b 1 2 a b)))
